@@ -21,7 +21,7 @@ datasource db {
 model users {
   id                  String    @id               @db.Char(36)                    
   email               String    @unique           @db.VarChar(80)
-  nick_name           String    @unique           @db.VarChar(20)
+  username           String    @unique           @db.VarChar(20)
   password            String?                     @db.VarChar(60)
   about_me            String?                     @db.VarChar(100)
   profile_image_url   String?                     @db.VarChar(150)
@@ -29,4 +29,20 @@ model users {
   created_at          DateTime                    @db.Timestamp(6)        @default(now())   
   updated_at          DateTime?                   @db.Timestamp(6)        @updatedAt
   delete_yn           String?                     @db.Char(1)             @default("N")
+}
+
+model snapshot_users {
+  snapshot_users_id   Int         @id             @default(autoincrement())
+  id                  String                      @db.Char(36)                    
+  email               String                      @db.VarChar(80)
+  username           String                      @db.VarChar(20)
+  password            String?                     @db.VarChar(60)
+  about_me            String?                     @db.VarChar(100)
+  profile_image_url   String?                     @db.VarChar(150)
+  provider            String                      @db.VarChar(20)                                 
+  created_at          DateTime                    @db.Timestamp(6)                                
+  updated_at          DateTime?                   @db.Timestamp(6)                                
+  delete_yn           String?                     @db.Char(1)                                     
+
+  @@index([id])
 }
