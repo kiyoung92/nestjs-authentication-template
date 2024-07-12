@@ -1,3 +1,4 @@
+import { UserModule } from './user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -9,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
           ? './env/.env.development'
           : './env/.env.production',
     }),
+    UserModule,
   ],
   controllers: [],
   providers: [],

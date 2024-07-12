@@ -9,8 +9,8 @@ export interface IEmail {
   readonly email: string & tags.Format<'email'>;
 }
 
-export interface INickName {
-  readonly nick_name: string & tags.MinLength<2> & tags.MaxLength<20>;
+export interface IUsername {
+  readonly username: string & tags.MinLength<2> & tags.MaxLength<20>;
 }
 
 export interface IPassword {

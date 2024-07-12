@@ -8,10 +8,10 @@ export interface GlobalResponseType {
     statusCode,
     message,
   }: ResponseExceptionParams) => ResponseException;
-  readonly error: ({
+  readonly error: <DataType>({
     statusCode,
     message,
-  }: ResponseErrorParams) => ResponseError;
+  }: ResponseErrorParams<DataType>) => ResponseError<DataType>;
 }
 
 export interface ResponseSuccessParams<DataType> {
@@ -40,14 +40,16 @@ export interface ResponseException {
   readonly timestamp: string;
 }
 
-export interface ResponseErrorParams {
+export interface ResponseErrorParams<DataType> {
   readonly statusCode: number;
   readonly message: string;
+  readonly data?: DataType;
 }
 
-export interface ResponseError {
+export interface ResponseError<DataType> {
   statusCode: number;
   readonly status: 'error';
   message: string;
+  readonly data?: DataType;
   readonly timestamp: string;
 }

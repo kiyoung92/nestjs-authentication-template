@@ -33,11 +33,16 @@ export const GlobalResponse: GlobalResponseType = Object.freeze({
       timestamp: new Date().toISOString(),
     };
   },
-  error: ({ statusCode, message }: ResponseErrorParams): ResponseError => {
+  error: <DataType>({
+    statusCode,
+    message,
+    data,
+  }: ResponseErrorParams<DataType>): ResponseError<DataType> => {
     return {
       statusCode,
       status: 'error',
       message,
+      data,
       timestamp: new Date().toISOString(),
     };
   },

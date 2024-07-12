@@ -27,18 +27,18 @@ export class AppGlobal {
     app.useGlobalFilters(new AllExceptionsFilter());
     app.use(cookieParser());
     app.enableCors({
-      origin: getEnv<string>('CLIENT_URL') || 'http://localhost:8080',
+      origin: getEnv<string>('CLIENT_URL'),
       methods: 'GET,HEAD,POST,PATCH,DELETE',
       allowedHeaders: 'Content-type,Authorization',
       exposedHeaders: 'Authorization,Location',
       credentials: true,
     });
-    app.setGlobalPrefix(getEnv<string>('API_VERSION') || 'test');
+    app.setGlobalPrefix(getEnv<string>('API_VERSION'));
 
     connectRedis();
     await prisma.$connect();
-    await app.listen(getEnv<number>('PORT') || 3000);
+    await app.listen(getEnv<number>('PORT'));
 
-    logger.info(`Server is running on ${getEnv<number>('PORT') || 3000}`);
+    logger.info(`Server is running on ${getEnv<number>('PORT')}`);
   }
 }
