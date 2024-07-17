@@ -8,5 +8,12 @@ export interface UserAllFields {
   readonly provider: string;
   readonly created_at: Date;
   readonly updated_at: Date | null;
-  readonly delete_yn: string | null;
+  readonly deleted_at: Date | null;
+}
+
+export interface CreateUserFields {
+  readonly id: string;
+  readonly email: string;
+  readonly password: string;
+  readonly username: string;
 }

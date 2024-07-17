@@ -1,5 +1,6 @@
 import { TypedBody, TypedRoute } from '@nestia/core';
-import { Controller, Res } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
+import { IEmail, IPassword, IUsername } from 'src/global/dtos.global';
 import {
   ResponseError,
   ResponseSuccess,
@@ -15,11 +16,30 @@ import { UserService } from 'src/user/providers/user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @TypedRoute.Post('/checkSignUpInfo')
-  async checkSignUpInfo(
-    @TypedBody() dto: UserSignUpInfoDto,
-  ): Promise<ResponseSuccess<null> | ResponseError<UserPasswordStrength>> {
-    return await this.userService.checkSignUpInfo({
+  @TypedRoute.Post('/checkEmail')
+  async checkEmail(@TypedBody() dto: IEmail): Promise<ResponseSuccess<null>> {
+    return await this.userService.checkEmail({ email: dto.email });
+  }
+
+  @TypedRoute.Post('/checkUserName')
+  async checkUserName(
+    @TypedBody() dto: IUsername,
+  ): Promise<ResponseSuccess<null>> {
+    return await this.userService.checkUserName({ username: dto.username });
+  }
+
+  @TypedRoute.Post('/checkPassword')
+  checkPassword(
+    @TypedBody() dto: IPassword,
+  ):
+    | ResponseSuccess<UserPasswordStrength>
+    | ResponseError<UserPasswordStrength> {
+    return this.userService.checkPassword({ password: dto.password });
+  }
+
+  @TypedRoute.Post('/sendVerificationCode')
+  async sendVerificationCode(@TypedBody() dto: UserSignUpInfoDto) {
+    return await this.userService.sendVerificationCode({
       email: dto.email,
       username: dto.username,
       password: dto.password,
