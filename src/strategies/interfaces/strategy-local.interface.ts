@@ -1,4 +1,4 @@
-export interface UserPrismaAllFields {
+export interface StrategyLocalUserAllFields {
   readonly id: string;
   readonly email: string;
   readonly username: string;
@@ -9,11 +9,4 @@ export interface UserPrismaAllFields {
   readonly created_at: Date;
   readonly updated_at: Date | null;
   readonly deleted_at: Date | null;
-}
-
-export interface UserPrismaCreateUserParams {
-  readonly id: string;
-  readonly email: string;
-  readonly password: string;
-  readonly username: string;
 }

@@ -12,18 +12,16 @@ import {
 import { redis } from 'src/global/redis.global';
 import { GlobalResponse } from 'src/global/response.global';
 import {
-  UserSignUpDto,
-  UserSignUpInfoDto,
-} from 'src/user/interfaces/user-dtos.interface';
-import {
   UserCheckPasswordStrength,
   UserPasswordStrength,
+  UserSendVerificationCodeInfo,
+  UserSignUpInfo,
 } from 'src/user/interfaces/user-service.interface';
 import {
   prismaCreateUser,
   prismaFindByEmail,
   prismaFindByUsername,
-} from 'src/user/repositories/user.prisma';
+} from 'src/user/repositories/user-prisma.repository';
 import { BcryptUtil } from 'src/utils/bcrypt.util';
 import { sendEmail } from 'src/utils/email.util';
 import { UuidUtil } from 'src/utils/uuid.util';
@@ -82,7 +80,7 @@ export class UserService {
     email,
     password,
     username,
-  }: UserSignUpInfoDto): Promise<ResponseSuccess<null>> {
+  }: UserSendVerificationCodeInfo): Promise<ResponseSuccess<null>> {
     const verificationCode = UuidUtil.randomNumericString();
 
     await sendEmail({
@@ -108,7 +106,8 @@ export class UserService {
   async signUp({
     email,
     verificationCode,
-  }: UserSignUpDto): Promise<ResponseSuccess<null>> {
+  }: UserSignUpInfo): Promise<ResponseSuccess<null>> {
+    // TODO: 탈퇴회원 기간 처리
     const redisVerificationCode = await redis.hget(email, 'verificationCode');
 
     if (!redisVerificationCode || redisVerificationCode !== verificationCode) {

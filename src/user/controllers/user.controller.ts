@@ -6,9 +6,9 @@ import {
   ResponseSuccess,
 } from 'src/global/interfaces/response.interface';
 import {
+  UserSendVerificationCodeDto,
   UserSignUpDto,
-  UserSignUpInfoDto,
-} from 'src/user/interfaces/user-dtos.interface';
+} from 'src/user/dtos/user.dto';
 import { UserPasswordStrength } from 'src/user/interfaces/user-service.interface';
 import { UserService } from 'src/user/providers/user.service';
 
@@ -38,7 +38,9 @@ export class UserController {
   }
 
   @TypedRoute.Post('/sendVerificationCode')
-  async sendVerificationCode(@TypedBody() dto: UserSignUpInfoDto) {
+  async sendVerificationCode(
+    @TypedBody() dto: UserSendVerificationCodeDto,
+  ): Promise<ResponseSuccess<null>> {
     return await this.userService.sendVerificationCode({
       email: dto.email,
       username: dto.username,
@@ -47,7 +49,9 @@ export class UserController {
   }
 
   @TypedRoute.Post('/signUp')
-  async signUp(@TypedBody() dto: UserSignUpDto) {
+  async signUp(
+    @TypedBody() dto: UserSignUpDto,
+  ): Promise<ResponseSuccess<null>> {
     return await this.userService.signUp({
       email: dto.email,
       verificationCode: dto.verificationCode,

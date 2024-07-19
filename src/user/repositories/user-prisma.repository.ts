@@ -1,14 +1,20 @@
-import { IEmail, IUsername } from 'src/global/dtos.global';
+import { IEmail, IID, IUsername } from 'src/global/dtos.global';
 import { prisma } from 'src/global/prisma.global';
-import { UserSignUpInfoDto } from 'src/user/interfaces/user-dtos.interface';
 import {
-  CreateUserFields,
-  UserAllFields,
+  UserPrismaAllFields,
+  UserPrismaCreateUserParams,
 } from 'src/user/interfaces/user-prisma.interfcae';
 
+export const prismaFindById = async ({ id }: IID) => {
+  return await prisma.users.findUnique({
+    where: {
+      id,
+    },
+  });
+};
 export const prismaFindByEmail = async ({
   email,
-}: IEmail): Promise<UserAllFields | null> => {
+}: IEmail): Promise<UserPrismaAllFields | null> => {
   return await prisma.users.findUnique({
     where: {
       email,
@@ -18,7 +24,7 @@ export const prismaFindByEmail = async ({
 
 export const prismaFindByUsername = async ({
   username,
-}: IUsername): Promise<UserAllFields | null> => {
+}: IUsername): Promise<UserPrismaAllFields | null> => {
   return await prisma.users.findUnique({
     where: {
       username,
@@ -31,7 +37,7 @@ export const prismaCreateUser = async ({
   email,
   password,
   username,
-}: CreateUserFields) => {
+}: UserPrismaCreateUserParams) => {
   return await prisma.users.create({
     data: {
       id,

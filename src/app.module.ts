@@ -1,6 +1,7 @@
 import { UserModule } from './user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
           : './env/.env.production',
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
