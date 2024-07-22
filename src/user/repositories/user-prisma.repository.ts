@@ -2,10 +2,13 @@ import { IEmail, IID, IUsername } from 'src/global/dtos.global';
 import { prisma } from 'src/global/prisma.global';
 import {
   UserPrismaAllFields,
+  UserPrismaCreateAgainUserParams,
   UserPrismaCreateUserParams,
 } from 'src/user/interfaces/user-prisma.interfcae';
 
-export const prismaFindById = async ({ id }: IID) => {
+export const prismaFindById = async ({
+  id,
+}: IID): Promise<UserPrismaAllFields | null> => {
   return await prisma.users.findUnique({
     where: {
       id,
@@ -37,13 +40,35 @@ export const prismaCreateUser = async ({
   email,
   password,
   username,
-}: UserPrismaCreateUserParams) => {
+}: UserPrismaCreateUserParams): Promise<UserPrismaAllFields | null> => {
   return await prisma.users.create({
     data: {
       id,
       email,
       password,
       username,
+    },
+  });
+};
+
+export const prismaCreateAgainUser = async ({
+  id,
+  email,
+  password,
+  username,
+  created_at,
+  deleted_at,
+}: UserPrismaCreateAgainUserParams): Promise<UserPrismaAllFields | null> => {
+  return await prisma.users.update({
+    where: {
+      id,
+    },
+    data: {
+      email,
+      password,
+      username,
+      created_at,
+      deleted_at,
     },
   });
 };

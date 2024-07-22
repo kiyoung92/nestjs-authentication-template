@@ -18,6 +18,7 @@ import {
   UserSignUpInfo,
 } from 'src/user/interfaces/user-service.interface';
 import {
+  prismaCreateAgainUser,
   prismaCreateUser,
   prismaFindByEmail,
   prismaFindByUsername,
@@ -26,12 +27,19 @@ import { BcryptUtil } from 'src/utils/bcrypt.util';
 import { sendEmail } from 'src/utils/email.util';
 import { UuidUtil } from 'src/utils/uuid.util';
 
+// TODO: JSDoc
 @Injectable()
 export class UserService {
   async checkEmail({ email }: IEmail): Promise<ResponseSuccess<null>> {
     const isAlreadyEmail = await prismaFindByEmail({ email });
 
-    if (isAlreadyEmail) {
+    if (
+      (isAlreadyEmail &&
+        isAlreadyEmail.deleted_at &&
+        new Date().getTime() - new Date(isAlreadyEmail.deleted_at).getTime() <
+          1000 * 60 * 60 * 24 * 7) ||
+      isAlreadyEmail
+    ) {
       throw new ConflictException('사용할 수 없는 이메일입니다.');
     }
 
@@ -107,7 +115,6 @@ export class UserService {
     email,
     verificationCode,
   }: UserSignUpInfo): Promise<ResponseSuccess<null>> {
-    // TODO: 탈퇴회원 기간 처리
     const redisVerificationCode = await redis.hget(email, 'verificationCode');
 
     if (!redisVerificationCode || redisVerificationCode !== verificationCode) {
@@ -122,7 +129,20 @@ export class UserService {
       throw new BadRequestException('잘못된 요청입니다.');
     }
 
-    await prismaCreateUser({ id, email, password, username });
+    const isAlreadyEmail = await prismaFindByEmail({ email });
+
+    if (isAlreadyEmail) {
+      await prismaCreateAgainUser({
+        id: isAlreadyEmail.id,
+        email,
+        password,
+        username,
+        created_at: new Date(),
+        deleted_at: null,
+      });
+    } else {
+      await prismaCreateUser({ id, email, password, username });
+    }
     await redis.hdel(email, 'username', 'password', 'verificationCode');
 
     return GlobalResponse.success({

@@ -17,3 +17,12 @@ export interface UserPrismaCreateUserParams {
   readonly password: string;
   readonly username: string;
 }
+
+export interface UserPrismaCreateAgainUserParams {
+  readonly id: string;
+  readonly email: string;
+  readonly password: string;
+  readonly username: string;
+  readonly created_at: Date;
+  readonly deleted_at: Date | null;
+}
